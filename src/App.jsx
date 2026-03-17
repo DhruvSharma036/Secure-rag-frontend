@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
 
-const BASE_URL = "http://localhost:8000"; 
+const BASE_URL = "https://dhruvsharma0603-secure-rag-backend.hf.space"; 
 
 const DARK = {
   void:"#0B0D12", obsidian:"#10131A", surface:"#151820", surfaceUp:"#1C2028",
