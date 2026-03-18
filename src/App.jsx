@@ -312,12 +312,12 @@ function Landing({onEnter,isDark,onToggle}) {
   },[g]);
 
   const features=[
-    {icon:"+",title:"Semantic Input Guard",desc:"FAISS cosine similarity filter stops adversarial queries before they reach your LLM.",c:t.orange},
-    {icon:"-",title:"Presidio PII Redaction",desc:"NER on every input and output. Aadhaar, PAN, phones, names — auto-redacted at every stage.",c:t.crimson},
-    {icon:"*",title:"Secure Vector RAG",desc:"Pre-redacted FAISS index with output guard. Context never leaks raw PII into prompts.",c:t.yellow},
-    {icon:"/",title:"Multi-LLM Benchmarking",desc:"7 models, 5 attack categories, 140 adversarial prompts. Full ASR and latency breakdown.",c:t.green},
-    {icon:"!",title:"Attack Simulation Suite",desc:"Data leakage, deception, social engineering — extreme difficulty across every attack vector.",c:t.crimson},
-    {icon:"-",title:"Custom Query Testing",desc:"Submit your own queries as tests. Per-model scoring across all attack dimensions instantly.",c:t.orange},
+    {icon:"IG",title:"Semantic Input Guard",desc:"FAISS cosine similarity filter stops adversarial queries before they reach your LLM.",c:t.orange},
+    {icon:"PR",title:"Presidio PII Redaction",desc:"NER on every input and output. Aadhaar, PAN, phones, names — auto-redacted at every stage.",c:t.crimson},
+    {icon:"VR",title:"Secure Vector RAG",desc:"Pre-redacted FAISS index with output guard. Context never leaks raw PII into prompts.",c:t.yellow},
+    {icon:"BM",title:"Multi-LLM Benchmarking",desc:"7 models, 5 attack categories, 140 adversarial prompts. Full ASR and latency breakdown.",c:t.green},
+    {icon:"AS",title:"Attack Simulation Suite",desc:"Data leakage, deception, social engineering — extreme difficulty across every attack vector.",c:t.crimson},
+    {icon:"QT",title:"Custom Query Testing",desc:"Submit your own queries as tests. Per-model scoring across all attack dimensions instantly.",c:t.orange},
   ];
 
   return (
@@ -352,15 +352,53 @@ function Landing({onEnter,isDark,onToggle}) {
             <span style={{background:`linear-gradient(90deg,${t.orange},${t.crimson})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",display:"block"}}>ACROSS EVERY VECTOR</span>
           </h1>
           <p className="hi text-base leading-relaxed mb-8 max-w-lg" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif",opacity:0}}>
-            Three-layer secure pipeline with semantic filtering, PII redaction, and vector retrieval. Benchmark 7 LLMs against 140 adversarial prompts and measure real security tax.
-          </p>
-          <div className="hi flex items-center justify-center gap-3" style={{opacity:0}}>
-            <MagBtn onClick={onEnter} variant="primary" style={{padding:"13px 36px",fontSize:13,letterSpacing:"0.22em"}}>Launch Dashboard</MagBtn>
-          </div>
+            
+          </p>Three-layer secure pipeline engineered to enforce a strict 80% minimum safety floor, achieving up to 100% Attack mitigation across 7 state-of-the-art LLMs.
+          <div
+  className="hi flex items-center justify-center gap-4"
+  style={{ opacity: 0 }}
+>
+  <MagBtn
+    onClick={onEnter}
+    variant="primary"
+    style={{
+      padding: "13px 36px",
+      fontSize: 13,
+      letterSpacing: "0.22em",
+    }}
+  >
+    Launch Dashboard
+  </MagBtn>
+
+  <a
+    href="https://ieeexplore.ieee.org/document/11383622/authors#authors"
+    target="_blank"
+    rel="noreferrer"
+    className="flex items-center gap-2 px-6 py-3 rounded font-black text-xs tracking-widest uppercase transition-all duration-200"
+    style={{
+      background: t.surfaceUp,
+      color: t.textSub,
+      border: `1px solid ${t.border}`,
+      fontFamily: "'Rajdhani', sans-serif",
+      letterSpacing: "0.18em",
+      textDecoration: "none",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.color = t.orange;
+      e.currentTarget.style.borderColor = t.orange + "50";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.color = t.textSub;
+      e.currentTarget.style.borderColor = t.border;
+    }}
+  >
+    Read Research Paper
+  </a>
+</div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 mb-16">
-          {[{n:7,s:"",label:"LLMs Evaluated",c:t.orange},{n:140,s:"",label:"Adversarial Tests",c:t.crimson},{n:3,s:"",label:"Security Layers",c:t.yellow},{n:88,s:"%",label:"Best Security Score",c:t.green}].map((st,i)=>(
+          {[{n:7,s:"",label:"LLMs Evaluated",c:t.orange},{n:140,s:"",label:"Adversarial Tests",c:t.crimson},{n:3,s:"",label:"Security Layers",c:t.yellow},{n:100,s:"%",label:"Best Security Score",c:t.green}].map((st,i)=>(
             <Card key={i} className="p-5 text-center transition-all duration-300" style={{cursor:"default"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-5px)";e.currentTarget.style.boxShadow=`0 12px 40px ${st.c}18`;e.currentTarget.style.borderColor=st.c+"40"}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=t.border}}>
@@ -404,15 +442,15 @@ function Landing({onEnter,isDark,onToggle}) {
             margin: "0 auto 32px auto"
           }}>
             {[
-              {icon:"/",label:"INPUT",   sub:"User query",         c:t.textMuted,bg:t.surfaceUp},
+              {icon:"IN",label:"INPUT",   sub:"User query",         c:t.textMuted,bg:t.surfaceUp},
               null,
-              {icon:"-",label:"LAYER 1", sub:"Semantic Filter",    c:t.orange,   bg:t.orangeDim},
+              {icon:"L1",label:"LAYER 1", sub:"Semantic Filter",    c:t.orange,   bg:t.orangeDim},
               null,
-              {icon:"!",label:"LAYER 2", sub:"Sanitising Layer",   c:t.crimson,  bg:t.crimsonDim},
+              {icon:"L2",label:"LAYER 2", sub:"Sanitising Layer",   c:t.crimson,  bg:t.crimsonDim},
               null,
-              {icon:"*",label:"LAYER 3", sub:"Secure RAG",         c:t.yellow,   bg:t.yellowDim},
+              {icon:"L3",label:"LAYER 3", sub:"Secure RAG",         c:t.yellow,   bg:t.yellowDim},
               null,
-              {icon:"+", label:"OUTPUT", sub:"Redacted Response",  c:t.green,    bg:t.green+"22"},
+              {icon:"OP", label:"OUTPUT", sub:"Redacted Response",  c:t.green,    bg:t.green+"22"},
             ].map((item,i)=>{
               if(item===null){
                 const colors=[
@@ -737,9 +775,12 @@ function BenchmarkView({docs, isSecure}) {
               <Card className="p-4">
                 <SL accent>Leaderboard</SL>
                 <div className="flex flex-col gap-3">
-                  {MODELS.filter(m=>selMods.includes(m.id)).map((m,rank)=>{
-                    const mr=results.filter(r=>r.model===m.id); const avg=mr.reduce((a,r)=>a+r.score,0)/mr.length;
-                    return (
+                {MODELS.filter(m=>selMods.includes(m.id))
+                    .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/mr.length}; })
+                    .sort((a,b)=>b.avg - a.avg)
+                    .map((m,rank)=>{
+                      const avg = m.avg;
+                      return (
                       <div key={m.id} className="rr flex items-center gap-3 opacity-0 transition-all duration-200" style={{cursor:"default"}} onMouseEnter={e=>e.currentTarget.style.transform="translateX(4px)"} onMouseLeave={e=>e.currentTarget.style.transform="none"}>
                         <span className="text-xs font-black w-4 text-center" style={{color:rank===0?t.yellow:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>#{rank+1}</span>
                         <MBadge modelId={m.id}/>
@@ -761,9 +802,12 @@ function BenchmarkView({docs, isSecure}) {
                     <th className="pb-3 pl-3 text-center font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Score</th>
                   </tr></thead>
                   <tbody>
-                    {MODELS.filter(m=>selMods.includes(m.id)).map(m=>{
-                      const mr=results.filter(r=>r.model===m.id); const avg=mr.reduce((a,r)=>a+r.score,0)/mr.length;
-                      return (
+                  {MODELS.filter(m=>selMods.includes(m.id))
+                      .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/mr.length}; })
+                      .sort((a,b)=>b.avg - a.avg)
+                      .map(m=>{
+                        const avg = m.avg;
+                        return (
                         <tr key={m.id} className="transition-all duration-200 rounded" onMouseEnter={e=>e.currentTarget.style.background=t.surfaceUp} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
                           <td className="pr-4 py-2"><div className="flex items-center gap-2"><MBadge modelId={m.id}/><span style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif",fontWeight:700}}>{m.name}</span></div></td>
                           {DIMS.map(d=>{
