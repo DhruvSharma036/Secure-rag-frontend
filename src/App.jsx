@@ -912,7 +912,7 @@ function BenchmarkView({docs, isSecure}) {
   );
 }
 
-function AnalyticsView({isSecure}) {
+function AnalyticsView({ isSecure, view }) {
   const t=useT(); const g=useGSAP();
   const [latData,setLatData]=useState([]);
   const [leaderboard,setLeaderboard]=useState([]);
@@ -921,6 +921,9 @@ function AnalyticsView({isSecure}) {
   const cardsRef=useRef();
 
   useEffect(()=>{
+    // 1. Tell it to only fetch data if the user is actually looking at the Insights tab
+    if(view !== "analytics") return;
+
     setLoading(true);
     Promise.all([
       apiAnalyticsOverview().catch(()=>null),
@@ -928,20 +931,33 @@ function AnalyticsView({isSecure}) {
     ]).then(([overview,latency])=>{
       if(overview?.leaderboard) setLeaderboard(overview.leaderboard);
       if(latency?.data){
-        // Filter based on active security mode
         const activeMode = isSecure ? "FILTERED" : "UNFILTERED";
         const filteredData = latency.data.filter(d => d.security_mode === activeMode);
-        setLatData(filteredData.map(d=>({
-          model:d.model,
-          if:d.input_filter||0, ret:d.retrieval||0,
-          gen:d.model_gen||0,   of:d.output_filter||0,
-          total: (d.input_filter||0) + (d.retrieval||0) + (d.model_gen||0) + (d.output_filter||0),
-        })));
+        const aggregated = [];
+        
+        MODELS.forEach(m => {
+          const modelData = filteredData.filter(d => d.model === m.id);
+          if(modelData.length > 0) {
+            const avg = (key) => modelData.reduce((sum, d) => sum + (d[key] || 0), 0) / modelData.length;
+            const if_avg = avg("input_filter");
+            const ret_avg = avg("retrieval");
+            const gen_avg = avg("model_gen");
+            const of_avg = avg("output_filter");
+            
+            aggregated.push({
+              model: m.id,
+              if: if_avg, ret: ret_avg, gen: gen_avg, of: of_avg,
+              total: if_avg + ret_avg + gen_avg + of_avg
+            });
+          }
+        });
+        setLatData(aggregated);
       }
       if(latency?.note) setLatNote(latency.note);
       setLoading(false);
     });
-  },[isSecure]);
+  // 2. Add 'view' here so React knows to re-run this when the view changes
+  },[isSecure, view]);
 
   useEffect(()=>{
     if(!g||!cardsRef.current||loading)return;
@@ -1215,7 +1231,7 @@ function Dashboard({onBack,isDark,onToggle}) {
           <BenchmarkView docs={docs} isSecure={isSecure}/>
         </div>
         <div style={{ display: view === "analytics" ? "block" : "none" }}>
-          <AnalyticsView isSecure={isSecure}/>
+          <AnalyticsView isSecure={isSecure} view={view} />
         </div>
       </main>
     </div>
