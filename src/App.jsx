@@ -916,12 +916,12 @@ function AnalyticsView({ isSecure, view }) {
   const t=useT(); const g=useGSAP();
   const [latData,setLatData]=useState([]);
   const [leaderboard,setLeaderboard]=useState([]);
-  const [loading,setLoading]=useState(true);
+  const [loading,setLoading]=useState(false);
   const [latNote,setLatNote]=useState(null);
+  const [refreshTick,setRefreshTick]=useState(0);
   const cardsRef=useRef();
 
   useEffect(()=>{
-    // 1. Tell it to only fetch data if the user is actually looking at the Insights tab
     if(view !== "analytics") return;
 
     setLoading(true);
@@ -954,16 +954,15 @@ function AnalyticsView({ isSecure, view }) {
         setLatData(aggregated);
       }
       if(latency?.note) setLatNote(latency.note);
-      setLoading(false);
-    });
-  // 2. Add 'view' here so React knows to re-run this when the view changes
-  },[isSecure, view]);
+    }).catch(()=>{}).finally(()=>setLoading(false));
+  },[isSecure, view, refreshTick]);
 
   useEffect(()=>{
     if(!g||!cardsRef.current||loading)return;
+    // Cards are visible by default (opacity:1), GSAP adds a slide-in entrance
     g.fromTo(cardsRef.current.querySelectorAll(".kc"),
-      {opacity:0,y:18,scale:0.97},
-      {opacity:1,y:0,scale:1,duration:0.48,stagger:0.09,ease:"power2.out"});
+      {y:18,scale:0.97},
+      {y:0,scale:1,duration:0.48,stagger:0.09,ease:"power2.out"});
   },[g,loading]);
 
   const stgs=["if","ret","gen","of"];
@@ -989,6 +988,20 @@ function AnalyticsView({ isSecure, view }) {
 
   return (
     <div className="flex flex-col gap-5">
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-xs font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.18em"}}>
+          {loading ? "LOADING…" : latNote || "Live metrics · refreshed on tab open"}
+        </p>
+        <button
+          onClick={()=>setRefreshTick(n=>n+1)}
+          disabled={loading}
+          className="flex items-center gap-1.5 px-3 py-1 rounded text-xs font-black tracking-widest uppercase transition-all duration-200"
+          style={{background:t.surfaceUp,border:`1px solid ${t.border}`,color:loading?t.textMuted:t.orange,fontFamily:"'Rajdhani',sans-serif",cursor:loading?"not-allowed":"pointer",opacity:loading?0.5:1}}
+          onMouseEnter={e=>{if(!loading)e.currentTarget.style.borderColor=t.orange+"60";}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;}}>
+          ↻ Refresh
+        </button>
+      </div>
       <div ref={cardsRef} className="grid grid-cols-4 gap-4">
         {[
           {label:"Models Evaluated",  value:"7",        sub:"Gemini · Mistral · Groq · LLaMA · DeepSeek · BERT · MiniLM", c:t.orange,  icon:"-"},
@@ -996,7 +1009,7 @@ function AnalyticsView({ isSecure, view }) {
           {label:"Best Security Score",value:bestScore,  sub:bestModel,                                                      c:t.yellow,  icon:"*"},
           {label:"Avg Pipeline Latency",value:avgLat,    sub:isSecure ? "Includes full security tax" : "Baseline raw latency",                        c:t.green,   icon:"+"},
         ].map((s,i)=>(
-          <Card key={i} className="kc p-5 opacity-0 transition-all duration-300" style={{cursor:"default"}}
+          <Card key={i} className="kc p-5 transition-all duration-300" style={{cursor:"default",opacity:1}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-5px)";e.currentTarget.style.borderColor=s.c+"50";e.currentTarget.style.boxShadow=`0 10px 36px ${s.c}15`;}}
             onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.borderColor=t.border;e.currentTarget.style.boxShadow="none";}}>
             <div className="flex items-start justify-between mb-3">
