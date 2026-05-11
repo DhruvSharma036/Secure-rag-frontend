@@ -23,7 +23,7 @@ const LIGHT = {
   inputBg:"#EEE3D8", navBg:"#FDFAF7", isDark:false,
 };
 
-const ThemeCtx = createContext(DARK);
+const ThemeCtx = createContext(LIGHT);
 const useT = () => useContext(ThemeCtx);
 
 const MODELS = [
@@ -152,7 +152,7 @@ function MagBtn({children,onClick,disabled,style={},variant="primary"}) {
   };
   return (
     <button ref={ref} onClick={onClick} disabled={disabled} onMouseMove={onMove} onMouseLeave={onLeave}
-      className="px-4 py-2 rounded font-black text-xs tracking-widest uppercase"
+      className="px-5 py-2.5 rounded font-black text-sm tracking-widest uppercase flex items-center justify-center gap-2"
       style={{fontFamily:"'Rajdhani',sans-serif",cursor:disabled?"not-allowed":"pointer",opacity:disabled?0.4:1,transition:"transform 0.15s ease,box-shadow 0.2s",letterSpacing:"0.18em",...vs[variant],...style}}>
       {children}
     </button>
@@ -185,17 +185,17 @@ function Card({children,className="",style={},glowColor=""}) {
 
 function SL({children,accent=false}) {
   const t=useT();
-  return <p className="text-xs font-black tracking-widest uppercase mb-3" style={{color:accent?t.orange:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.18em"}}>{children}</p>;
+  return <p className="text-sm font-black tracking-widest uppercase mb-4" style={{color:accent?t.orange:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.18em"}}>{children}</p>;
 }
 
 function MiniBar({value,max=100,color}) {
   const t=useT();
-  return <div className="h-1 rounded-full overflow-hidden w-full" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-700" style={{width:`${Math.min(100,(value/max)*100)}%`,background:color,boxShadow:t.isDark?`0 0 6px ${color}80`:"none"}}/></div>;
+  return <div className="h-1.5 rounded-full overflow-hidden w-full" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-700" style={{width:`${Math.min(100,(value/max)*100)}%`,background:color,boxShadow:t.isDark?`0 0 6px ${color}80`:"none"}}/></div>;
 }
 
 function MBadge({modelId,size="sm"}) {
   const m=MODELS.find(x=>x.id===modelId); if(!m)return null;
-  const sz=size==="lg"?"w-9 h-9 text-sm":size==="md"?"w-7 h-7 text-xs":"w-6 h-6 text-xs";
+  const sz=size==="lg"?"w-10 h-10 text-base":size==="md"?"w-8 h-8 text-sm":"w-7 h-7 text-sm";
   return <span className={`inline-flex items-center justify-center ${sz} rounded font-black flex-shrink-0`} style={{background:m.color+"20",color:m.color,border:`1px solid ${m.color}40`,fontFamily:"'Rajdhani',sans-serif"}}>{m.abbr}</span>;
 }
 
@@ -203,7 +203,7 @@ function SPill({status}) {
   const t=useT();
   const map={PASSED:[t.green+"20",t.green],BLOCKED:[t.crimson+"20",t.crimson],SUCCESS:[t.green+"20",t.green],REDACTED:[t.yellow+"20",t.yellow],CLEAN:[t.green+"20",t.green],ALLOWED:[t.green+"20",t.green]};
   const [bg,fg]=map[status]||[t.textMuted+"20",t.textMuted];
-  return <span className="px-2 py-0.5 rounded-sm text-xs font-black tracking-widest uppercase" style={{background:bg,color:fg,fontFamily:"'Rajdhani',sans-serif"}}>{status}</span>;
+  return <span className="px-3 py-1 rounded-sm text-sm font-black tracking-widest uppercase" style={{background:bg,color:fg,fontFamily:"'Rajdhani',sans-serif"}}>{status}</span>;
 }
 
 function Counter({target,suffix="",dur=1800}) {
@@ -226,7 +226,7 @@ function ThemeToggleBtn({isDark,onToggle}) {
   const t=isDark?DARK:LIGHT;
   return (
     <button onClick={onToggle}
-      className="flex items-center gap-2 px-3 py-1.5 rounded font-black text-xs tracking-widest uppercase transition-all duration-200"
+      className="flex items-center gap-2 px-4 py-2 rounded font-black text-sm tracking-widest uppercase transition-all duration-200"
       style={{background:t.surfaceUp,border:`1px solid ${t.border}`,color:t.textSub,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em"}}
       onMouseEnter={e=>{e.currentTarget.style.borderColor=t.orange+"50";e.currentTarget.style.color=t.orange;}}
       onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;e.currentTarget.style.color=t.textSub;}}>
@@ -240,7 +240,7 @@ function SecureModeToggleBtn({isSecure,onToggle}) {
   const clr = isSecure ? t.green : t.crimson;
   return (
     <button onClick={onToggle}
-      className="flex items-center gap-2 px-3 py-1.5 rounded font-black text-xs tracking-widest uppercase transition-all duration-200"
+      className="flex items-center gap-2 px-4 py-2 rounded font-black text-sm tracking-widest uppercase transition-all duration-200"
       style={{background:clr+"15",border:`1px solid ${clr}50`,color:clr,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em"}}
       onMouseEnter={e=>{e.currentTarget.style.background=clr+"25";}}
       onMouseLeave={e=>{e.currentTarget.style.background=clr+"15";}}>
@@ -270,28 +270,31 @@ function FileUpload({docs,setDocs}) {
   
   const fmt=b=>b<1024?`${b}B`:b<1048576?`${(b/1024).toFixed(1)}KB`:`${(b/1048576).toFixed(1)}MB`;
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <SL accent>Knowledge Base</SL>
       <div onClick={()=>!uploading && ir.current?.click()} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);if(!uploading)handle(e.dataTransfer.files)}}
-        className="rounded p-4 text-center cursor-pointer transition-all duration-300"
+        className="rounded-lg p-6 text-center cursor-pointer transition-all duration-300"
         style={{border:`2px dashed ${drag?t.orange:t.border}`,background:drag?t.orangeDim:"transparent",boxShadow:drag&&t.isDark?`0 0 20px ${t.orange}20`:"none", opacity: uploading ? 0.5 : 1}}>
         <input ref={ir} type="file" multiple accept=".pdf,.txt,.md,.json,.jsonl,.csv,.docx" className="hidden" onChange={e=>handle(e.target.files)}/>
-        <p className="text-xs font-black mb-0.5" style={{color:t.orange,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>{uploading ? "UPLOADING..." : "DROP FILES"}</p>
-        <p className="text-xs" style={{color:t.textMuted}}>JSONL · PDF · TXT · CSV</p>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          {uploading && <svg className="animate-spin h-4 w-4" style={{color:t.orange}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+          <p className="text-sm font-black" style={{color:t.orange,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>{uploading ? "UPLOADING..." : "DROP FILES"}</p>
+        </div>
+        <p className="text-sm" style={{color:t.textMuted}}>JSONL · PDF · TXT · CSV</p>
       </div>
       {docs.map(d=>(
-        <div key={d.id} className="flex items-center gap-2 px-2.5 py-2 rounded" style={{background:t.surfaceUp,border:`1px solid ${d.status==="ERROR"?t.crimson:t.border}`}}>
-          <span style={{color:d.status==="ERROR"?t.crimson:t.orange,fontSize:12}}>-</span>
-          <div className="flex-1 min-w-0"><p className="text-xs font-bold truncate" style={{color:t.text}}>{d.name}</p>
-          {d.status==="ERROR" ? <p style={{color:t.crimson,fontSize:10}}>{d.error}</p> : <p style={{color:t.textMuted,fontSize:10}}>{fmt(d.size)} · {d.chunks} chunks</p>}
+        <div key={d.id} className="flex items-center gap-3 px-3 py-2.5 rounded" style={{background:t.surfaceUp,border:`1px solid ${d.status==="ERROR"?t.crimson:t.border}`}}>
+          <span style={{color:d.status==="ERROR"?t.crimson:t.orange,fontSize:14}}>-</span>
+          <div className="flex-1 min-w-0"><p className="text-sm font-bold truncate" style={{color:t.text}}>{d.name}</p>
+          {d.status==="ERROR" ? <p style={{color:t.crimson,fontSize:12}}>{d.error}</p> : <p style={{color:t.textMuted,fontSize:12}}>{fmt(d.size)} · {d.chunks} chunks</p>}
           </div>
-          {d.status==="UPLOADING" && <span className="text-xs font-black px-1.5 py-0.5 rounded-sm" style={{background:t.orange+"15",color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>...</span>}
-          {d.status==="READY" && <span className="text-xs font-black px-1.5 py-0.5 rounded-sm" style={{background:t.green+"15",color:t.green,fontFamily:"'Rajdhani',sans-serif"}}>OK</span>}
-          <button onClick={()=>setDocs(p=>p.filter(x=>x.id!==d.id))} style={{color:t.crimson,opacity:0.5,fontSize:12}} className="hover:opacity-100 transition-opacity">X</button>
+          {d.status==="UPLOADING" && <span className="text-sm font-black px-2 py-0.5 rounded-sm" style={{background:t.orange+"15",color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>...</span>}
+          {d.status==="READY" && <span className="text-sm font-black px-2 py-0.5 rounded-sm" style={{background:t.green+"15",color:t.green,fontFamily:"'Rajdhani',sans-serif"}}>OK</span>}
+          <button onClick={()=>setDocs(p=>p.filter(x=>x.id!==d.id))} style={{color:t.crimson,opacity:0.5,fontSize:14}} className="hover:opacity-100 transition-opacity">X</button>
         </div>
       ))}
-      {docs.length===0&&<p className="text-xs text-center" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>NO DOCS · DEFAULT KB ACTIVE</p>}
-      {docs.length>0&&<button onClick={()=>setDocs([])} className="text-xs self-end hover:opacity-70 transition-opacity" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>clear all</button>}
+      {docs.length===0&&<p className="text-sm text-center mt-2" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>NO DOCS · DEFAULT KB ACTIVE</p>}
+      {docs.length>0&&<button onClick={()=>setDocs([])} className="text-sm self-end hover:opacity-70 transition-opacity" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>clear all</button>}
     </div>
   );
 }
@@ -330,116 +333,96 @@ function Landing({onEnter,isDark,onToggle}) {
         </div>
       </>}
 
-      <nav className="flex items-center justify-between px-10 py-4 sticky top-0 z-50" style={{background:t.navBg+(t.isDark?"EE":"F8"),borderBottom:`1px solid ${t.border}`,backdropFilter:"blur(16px)"}}>
+      <nav className="flex items-center justify-between px-10 py-5 sticky top-0 z-50" style={{background:t.navBg+(t.isDark?"EE":"F8"),borderBottom:`1px solid ${t.border}`,backdropFilter:"blur(16px)"}}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded flex items-center justify-center font-black text-sm" style={{background:`linear-gradient(135deg,${t.orange},${t.crimson})`,color:t.isDark?"#0A0608":"#fff",fontFamily:"'Rajdhani',sans-serif"}}>S</div>
-          <span className="font-black tracking-widest uppercase" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.22em",fontSize:15}}>SecureRAG</span>
+          <div className="w-10 h-10 rounded flex items-center justify-center font-black text-base" style={{background:`linear-gradient(135deg,${t.orange},${t.crimson})`,color:t.isDark?"#0A0608":"#fff",fontFamily:"'Rajdhani',sans-serif"}}>S</div>
+          <span className="font-black tracking-widest uppercase text-lg" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.22em"}}>SecureRAG</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <ThemeToggleBtn isDark={isDark} onToggle={onToggle}/>
-          <MagBtn onClick={onEnter} variant="primary" style={{padding:"10px 28px",fontSize:12}}>Enter Dashboard</MagBtn>
+          <MagBtn onClick={onEnter} variant="primary" style={{padding:"12px 32px",fontSize:14}}>Enter Dashboard</MagBtn>
         </div>
       </nav>
 
-      <div className="relative z-10" style={{maxWidth:1100,margin:"0 auto",padding:"80px 40px 80px"}}>
-        <div ref={heroRef} className="flex flex-col items-center text-center mb-16">
-          <div className="hi inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-black tracking-widest uppercase mb-8" style={{background:t.orangeDim,color:t.orange,border:`1px solid ${t.orangeMid}`,fontFamily:"'Rajdhani',sans-serif",opacity:0}}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}`:"none"}}/>
+      <div className="relative z-10" style={{maxWidth:1200,margin:"0 auto",padding:"100px 40px 100px"}}>
+        <div ref={heroRef} className="flex flex-col items-center text-center mb-20">
+          <div className="hi inline-flex items-center gap-2 px-4 py-2 rounded-sm text-sm font-black tracking-widest uppercase mb-8" style={{background:t.orangeDim,color:t.orange,border:`1px solid ${t.orangeMid}`,fontFamily:"'Rajdhani',sans-serif",opacity:0}}>
+            <span className="w-2 h-2 rounded-full" style={{background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}`:"none"}}/>
             Multi-LLM Security Evaluation Framework
           </div>
-          <h1 className="hi mb-6" style={{fontFamily:"'Rajdhani',sans-serif",fontWeight:700,fontSize:"clamp(2.6rem,6vw,4.8rem)",lineHeight:1.0,opacity:0}}>
+          <h1 className="hi mb-8" style={{fontFamily:"'Rajdhani',sans-serif",fontWeight:700,fontSize:"clamp(3.2rem,7vw,5.5rem)",lineHeight:1.05,opacity:0}}>
             <GlitchText text="EVALUATE RAG SECURITY" style={{color:t.text,display:"block"}}/>
             <span style={{background:`linear-gradient(90deg,${t.orange},${t.crimson})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",display:"block"}}>ACROSS EVERY VECTOR</span>
           </h1>
-          <p className="hi text-base leading-relaxed mb-8 max-w-lg" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif",opacity:0}}>
-            
-          </p>Three-layer secure pipeline engineered to enforce a strict 80% minimum safety floor, achieving up to 100% Attack mitigation across 7 state-of-the-art LLMs.
-          <div
-  className="hi flex items-center justify-center gap-4"
-  style={{ opacity: 0 }}
->
-  <MagBtn
-    onClick={onEnter}
-    variant="primary"
-    style={{
-      padding: "13px 36px",
-      fontSize: 13,
-      letterSpacing: "0.22em",
-    }}
-  >
-    Launch Dashboard
-  </MagBtn>
+          <p className="hi text-lg leading-relaxed mb-10 max-w-2xl" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif",opacity:0}}>
+            Three-layer secure pipeline engineered to enforce a strict 80% minimum safety floor, achieving up to 100% Attack mitigation across 7 state-of-the-art LLMs.
+          </p>
+          <div className="hi flex items-center justify-center gap-5" style={{ opacity: 0 }}>
+            <MagBtn onClick={onEnter} variant="primary" style={{ padding: "16px 42px", fontSize: 15, letterSpacing: "0.22em" }}>
+              Launch Dashboard
+            </MagBtn>
 
-  <a
-    href="https://ieeexplore.ieee.org/document/11383622/authors#authors"
-    target="_blank"
-    rel="noreferrer"
-    className="flex items-center gap-2 px-6 py-3 rounded font-black text-xs tracking-widest uppercase transition-all duration-200"
-    style={{
-      background: t.surfaceUp,
-      color: t.textSub,
-      border: `1px solid ${t.border}`,
-      fontFamily: "'Rajdhani', sans-serif",
-      letterSpacing: "0.18em",
-      textDecoration: "none",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.color = t.orange;
-      e.currentTarget.style.borderColor = t.orange + "50";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.color = t.textSub;
-      e.currentTarget.style.borderColor = t.border;
-    }}
-  >
-    Read Research Paper
-  </a>
-</div>
+            <a href="https://ieeexplore.ieee.org/document/11383622/authors#authors" target="_blank" rel="noreferrer"
+              className="flex items-center gap-2 px-8 py-4 rounded font-black text-sm tracking-widest uppercase transition-all duration-200"
+              style={{ background: t.surfaceUp, color: t.textSub, border: `1px solid ${t.border}`, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.18em", textDecoration: "none" }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = t.orange; e.currentTarget.style.borderColor = t.orange + "50"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = t.textSub; e.currentTarget.style.borderColor = t.border; }}>
+              Read Research Paper 1
+            </a>
+            
+            <a href="https://ieeexplore.ieee.org/document/11485085" target="_blank" rel="noreferrer"
+              className="flex items-center gap-2 px-8 py-4 rounded font-black text-sm tracking-widest uppercase transition-all duration-200"
+              style={{ background: t.surfaceUp, color: t.textSub, border: `1px solid ${t.border}`, fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.18em", textDecoration: "none" }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = t.orange; e.currentTarget.style.borderColor = t.orange + "50"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = t.textSub; e.currentTarget.style.borderColor = t.border; }}>
+              Read Research Paper 2
+            </a>
+          </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mb-16">
+        <div className="grid grid-cols-4 gap-6 mb-20">
           {[{n:7,s:"",label:"LLMs Evaluated",c:t.orange},{n:140,s:"",label:"Adversarial Tests",c:t.crimson},{n:3,s:"",label:"Security Layers",c:t.yellow},{n:100,s:"%",label:"Best Security Score",c:t.green}].map((st,i)=>(
-            <Card key={i} className="p-5 text-center transition-all duration-300" style={{cursor:"default"}}
+            <Card key={i} className="p-6 text-center transition-all duration-300" style={{cursor:"default"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-5px)";e.currentTarget.style.boxShadow=`0 12px 40px ${st.c}18`;e.currentTarget.style.borderColor=st.c+"40"}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=t.border}}>
-              <p className="text-4xl font-black mb-1" style={{color:st.c,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 20px ${st.c}50`:"none"}}><Counter target={st.n} suffix={st.s}/></p>
-              <p className="text-xs tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>{st.label}</p>
+              <p className="text-5xl font-black mb-2" style={{color:st.c,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 20px ${st.c}50`:"none"}}><Counter target={st.n} suffix={st.s}/></p>
+              <p className="text-sm tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>{st.label}</p>
             </Card>
           ))}
         </div>
 
-        <h2 className="text-2xl font-black text-center mb-2 tracking-widest uppercase" style={{fontFamily:"'Rajdhani',sans-serif",color:t.text}}>Built for Security-First RAG</h2>
-        <p className="text-sm text-center mb-8" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>Every layer engineered to prevent data leakage, prompt injection and PII exposure at scale</p>
-        <div ref={featRef} className="grid grid-cols-3 gap-4 mb-16">
+        <h2 className="text-3xl font-black text-center mb-3 tracking-widest uppercase" style={{fontFamily:"'Rajdhani',sans-serif",color:t.text}}>Built for Security-First RAG</h2>
+        <p className="text-base text-center mb-10" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>Every layer engineered to prevent data leakage, prompt injection and PII exposure at scale</p>
+        <div ref={featRef} className="grid grid-cols-3 gap-6 mb-20">
           {features.map((f,i)=>(
-            <Card key={i} className="fi p-5 opacity-0 transition-all duration-300" style={{cursor:"default"}}
+            <Card key={i} className="fi p-6 opacity-0 transition-all duration-300" style={{cursor:"default"}}
               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px) scale(1.01)";e.currentTarget.style.boxShadow=`0 14px 40px ${f.c}12`;e.currentTarget.style.borderColor=f.c+"40"}}
               onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=t.border}}>
-              <div className="w-10 h-10 rounded flex items-center justify-center text-xl mb-3 transition-all duration-200" style={{background:f.c+"18",color:f.c,border:`1px solid ${f.c}28`}}
+              <div className="w-12 h-12 rounded flex items-center justify-center text-2xl mb-4 transition-all duration-200" style={{background:f.c+"18",color:f.c,border:`1px solid ${f.c}28`}}
                 onMouseEnter={e=>{e.currentTarget.style.boxShadow=t.isDark?`0 0 20px ${f.c}40`:"none";e.currentTarget.style.transform="scale(1.1)"}}
                 onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none"}}>
                 {f.icon}
               </div>
-              <p className="font-black text-sm mb-2 tracking-wider uppercase" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{f.title}</p>
-              <p className="text-xs leading-relaxed" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>{f.desc}</p>
+              <p className="font-black text-base mb-2 tracking-wider uppercase" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{f.title}</p>
+              <p className="text-sm leading-relaxed" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>{f.desc}</p>
             </Card>
           ))}
         </div>
 
-        <Card className="p-8 mb-12">
-          <p className="text-xs font-black tracking-widest uppercase mb-10 text-center"
+        <Card className="p-10 mb-16">
+          <p className="text-sm font-black tracking-widest uppercase mb-12 text-center"
             style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.2em"}}>
             3-Layer Security Architecture
           </p>
 
           <div style={{
             display:"grid",
-            gridTemplateColumns:"80px 1fr 80px 1fr 80px 1fr 80px 1fr 80px",
+            gridTemplateColumns:"100px 1fr 100px 1fr 100px 1fr 100px 1fr 100px",
             alignItems:"center",
             gap:0,
-            marginBottom:32,
-            maxWidth: 900,
-            margin: "0 auto 32px auto"
+            marginBottom:40,
+            maxWidth: 1000,
+            margin: "0 auto 40px auto"
           }}>
             {[
               {icon:"IN",label:"INPUT",   sub:"User query",         c:t.textMuted,bg:t.surfaceUp},
@@ -462,51 +445,51 @@ function Landing({onEnter,isDark,onToggle}) {
                 const ci=Math.floor(i/2);
                 const [fc,tc]=colors[ci]||[t.textMuted,t.textMuted];
                 return (
-                  <div key={i} style={{display:"flex",alignItems:"center",paddingBottom:36}}>
-                    <div style={{flex:1,height:1,background:`linear-gradient(90deg,${fc}55,${tc}55)`}}/>
+                  <div key={i} style={{display:"flex",alignItems:"center",paddingBottom:44}}>
+                    <div style={{flex:1,height:2,background:`linear-gradient(90deg,${fc}55,${tc}55)`}}/>
                   </div>
                 );
               }
               return (
-                <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,textAlign:"center",width:80}}>
+                <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,textAlign:"center",width:100}}>
                   <div
-                    style={{width:48,height:48,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",
-                      fontSize:20,background:item.bg,color:item.c,
+                    style={{width:56,height:56,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",
+                      fontSize:24,background:item.bg,color:item.c,
                       border:`1px solid ${item.c}40`,
                       transition:"transform 0.2s,box-shadow 0.2s",cursor:"default"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.14)";if(t.isDark)e.currentTarget.style.boxShadow=`0 0 22px ${item.c}50`;}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
                     {item.icon}
                   </div>
-                  <span style={{color:item.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:11,letterSpacing:"0.08em",lineHeight:1}}>{item.label}</span>
-                  <span style={{color:t.textMuted,fontSize:10,fontFamily:"'DM Sans',sans-serif",lineHeight:1.2}}>{item.sub}</span>
+                  <span style={{color:item.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:13,letterSpacing:"0.08em",lineHeight:1}}>{item.label}</span>
+                  <span style={{color:t.textMuted,fontSize:12,fontFamily:"'DM Sans',sans-serif",lineHeight:1.2}}>{item.sub}</span>
                 </div>
               );
             })}
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16}}>
             {[
-              {n:"01",label:"Layer 1 — Semantic Filter",      desc:"FAISS cosine similarity scores every query against restricted topic vectors. Blocked before any data is accessed.",                             c:t.orange},
+              {n:"01",label:"Layer 1 — Semantic Filter",      desc:"FAISS cosine similarity scores every query against restricted topic vectors. Blocked before any data is accessed.",                              c:t.orange},
               {n:"02",label:"Layer 2 — Sanitising Layer",     desc:"Presidio NER + FAISS redaction strips Aadhaar, PAN, phones and person names from all inputs before they reach the vector index.",             c:t.crimson},
               {n:"03",label:"Layer 3 — Secure RAG + Redact",  desc:"Pre-anonymised FAISS index — the LLM never sees raw PII. A second Presidio pass scans and redacts every generated response before output.",   c:t.yellow},
             ].map((l,i)=>(
               <div key={i}
-                style={{borderRadius:8,padding:"14px 16px",background:l.c+"0D",border:`1px solid ${l.c}28`,transition:"border-color 0.2s,background 0.2s",cursor:"default"}}
+                style={{borderRadius:8,padding:"18px 20px",background:l.c+"0D",border:`1px solid ${l.c}28`,transition:"border-color 0.2s,background 0.2s",cursor:"default"}}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor=l.c+"58";e.currentTarget.style.background=l.c+"18";}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor=l.c+"28";e.currentTarget.style.background=l.c+"0D";}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-                  <span style={{background:l.c+"25",color:l.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:11,padding:"2px 7px",borderRadius:3,flexShrink:0}}>{l.n}</span>
-                  <span style={{color:l.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:11,letterSpacing:"0.05em",textTransform:"uppercase"}}>{l.label}</span>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+                  <span style={{background:l.c+"25",color:l.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:13,padding:"3px 8px",borderRadius:4,flexShrink:0}}>{l.n}</span>
+                  <span style={{color:l.c,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,fontSize:13,letterSpacing:"0.05em",textTransform:"uppercase"}}>{l.label}</span>
                 </div>
-                <p style={{color:t.textSub,fontSize:11,lineHeight:1.65,fontFamily:"'DM Sans',sans-serif",margin:0}}>{l.desc}</p>
+                <p style={{color:t.textSub,fontSize:13,lineHeight:1.65,fontFamily:"'DM Sans',sans-serif",margin:0}}>{l.desc}</p>
               </div>
             ))}
           </div>
         </Card>
 
         <div className="text-center">
-          <MagBtn onClick={onEnter} variant="primary" style={{padding:"14px 52px",fontSize:14,letterSpacing:"0.25em"}}>Start Evaluating</MagBtn>
+          <MagBtn onClick={onEnter} variant="primary" style={{padding:"16px 56px",fontSize:16,letterSpacing:"0.25em"}}>Start Evaluating</MagBtn>
         </div>
       </div>
     </div>
@@ -542,64 +525,67 @@ function QueryView({selModel,setSelModel,history,setHistory,docs,setDocs,isSecur
 
   useEffect(()=>{if(result&&g&&resultRef.current)g.fromTo(resultRef.current,{opacity:0,y:14},{opacity:1,y:0,duration:0.4,ease:"power2.out"});},[result,g]);
   return (
-    <div className="flex gap-4">
-      <div className="w-60 flex-shrink-0 flex flex-col gap-3">
-        <Card className="p-4">
+    <div className="flex gap-5">
+      <div className="w-72 flex-shrink-0 flex flex-col gap-4">
+        <Card className="p-5">
           <SL accent>Active Model</SL>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             {MODELS.map(m=>(
               <button key={m.id} onClick={()=>setSelModel(m.id)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded text-left transition-all duration-200"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded text-left transition-all duration-200"
                 style={{background:selModel===m.id?m.color+"15":"transparent",border:`1px solid ${selModel===m.id?m.color+"45":"transparent"}`}}
                 onMouseEnter={e=>{if(selModel!==m.id)e.currentTarget.style.background=t.surfaceUp}}
                 onMouseLeave={e=>{if(selModel!==m.id)e.currentTarget.style.background="transparent"}}>
                 <MBadge modelId={m.id}/>
                 <div className="min-w-0">
-                  <p className="text-xs font-black truncate" style={{color:selModel===m.id?m.color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</p>
-                  <p style={{color:t.textMuted,fontSize:10}}>{m.provider}</p>
+                  <p className="text-sm font-black truncate" style={{color:selModel===m.id?m.color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</p>
+                  <p style={{color:t.textMuted,fontSize:12}}>{m.provider}</p>
                 </div>
-                {selModel===m.id&&<span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:m.color,boxShadow:t.isDark?`0 0 5px ${m.color}`:"none"}}/>}
+                {selModel===m.id&&<span className="ml-auto w-2 h-2 rounded-full flex-shrink-0" style={{background:m.color,boxShadow:t.isDark?`0 0 6px ${m.color}`:"none"}}/>}
               </button>
             ))}
           </div>
         </Card>
-        <Card className="p-4"><FileUpload docs={docs} setDocs={setDocs}/></Card>
+        <Card className="p-5"><FileUpload docs={docs} setDocs={setDocs}/></Card>
       </div>
 
-      <div className="flex-1 flex flex-col gap-3 min-w-0">
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-2"><SL accent>Query Input</SL><span style={{color:t.textMuted,fontSize:11,fontFamily:"'Fira Code',monospace"}}>Cmd+Enter</span></div>
+      <div className="flex-1 flex flex-col gap-4 min-w-0">
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-3"><SL accent>Query Input</SL><span style={{color:t.textMuted,fontSize:13,fontFamily:"'Fira Code',monospace"}}>Cmd+Enter</span></div>
           <textarea value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>e.key==="Enter"&&e.metaKey&&submit()} placeholder="Enter query or adversarial prompt..." rows={4}
-            className="w-full resize-none rounded p-3 text-sm outline-none"
+            className="w-full resize-none rounded-lg p-4 text-base outline-none"
             style={{background:t.inputBg,color:t.text,border:`1px solid ${t.border}`,fontFamily:"'Fira Code',monospace",caretColor:t.orange,lineHeight:1.7,transition:"border-color 0.2s"}}
             onFocus={e=>e.target.style.borderColor=t.orange} onBlur={e=>e.target.style.borderColor=t.border}/>
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-3">
               <MBadge modelId={selModel}/>
-              <span className="text-xs font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===selModel)?.name}</span>
-              {docs.length>0&&<span className="text-xs px-2 py-0.5 rounded-sm font-black" style={{background:t.orangeDim,color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>+{docs.length} DOC</span>}
+              <span className="text-sm font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===selModel)?.name}</span>
+              {docs.length>0&&<span className="text-sm px-2.5 py-1 rounded-sm font-black" style={{background:t.orangeDim,color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>+{docs.length} DOC</span>}
             </div>
-            <MagBtn onClick={submit} disabled={!query.trim()||loading} variant="primary">{loading?"Processing...":"Run Query"}</MagBtn>
+            <MagBtn onClick={submit} disabled={!query.trim()||loading} variant="primary">
+              {loading && <svg className="animate-spin h-4 w-4" style={{color:t.isDark?"#0A0608":"#fff"}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+              {loading?"Processing...":"Run Query"}
+            </MagBtn>
           </div>
         </Card>
 
         {(loading||result)&&(
-          <Card className="p-4">
+          <Card className="p-5">
             <SL accent>Pipeline Stages</SL>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-3">
               {["Input Filter","Vector Retrieval","LLM Generation","Output Filter"].map((stage,i)=>{
                 const sr=result?.stages[i]; const done=result||(activeStage!==null&&i<activeStage); const active=activeStage===i;
                 const sc=sr?({PASSED:t.green,BLOCKED:t.crimson,SUCCESS:t.green,REDACTED:t.yellow,CLEAN:t.green}[sr.status]||t.textMuted):active?t.orange:t.textMuted;
                 return (
-                  <div key={stage} className="rounded p-3 transition-all duration-300"
+                  <div key={stage} className="rounded-lg p-4 transition-all duration-300"
                     style={{background:t.inputBg,border:`1px solid ${done&&sr?sc+"40":active?t.orange+"40":t.border}`,boxShadow:t.isDark?(active?`0 0 16px ${t.orange}25`:done&&sr?`0 0 8px ${sc}12`:"none"):"none"}}>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-black" style={{color:sc,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.05em"}}>{stage}</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-black" style={{color:sc,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.05em"}}>{stage}</span>
                       {sr&&<SPill status={sr.status}/>}
-                      {active&&!sr&&<span className="w-1.5 h-1.5 rounded-full" style={{background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}`:"none",animation:"pulse 0.8s infinite"}}/>}
+                      {active&&!sr&&<span className="w-2 h-2 rounded-full" style={{background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}`:"none",animation:"pulse 0.8s infinite"}}/>}
                     </div>
-                    {sr&&<p className="text-xs font-bold" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{sr.latency_ms}ms</p>}
-                    {sr&&<p className="mt-1 leading-snug" style={{color:t.textMuted,fontSize:10}}>{sr.detail}</p>}
+                    {sr&&<p className="text-sm font-bold" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{sr.latency_ms}ms</p>}
+                    {sr&&<p className="mt-1.5 leading-snug text-xs" style={{color:t.textMuted}}>{sr.detail}</p>}
                   </div>
                 );
               })}
@@ -608,47 +594,47 @@ function QueryView({selModel,setSelModel,history,setHistory,docs,setDocs,isSecur
         )}
 
         {apiError&&(
-          <Card className="p-4" glowColor={t.crimson+"50"}>
-            <p className="text-xs font-black mb-1" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>API ERROR</p>
-            <p className="text-sm" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{apiError}</p>
-            <p className="text-xs mt-2" style={{color:t.textMuted}}>Make sure the FastAPI backend is running on <span style={{color:t.orange}}>{BASE_URL}</span></p>
+          <Card className="p-5" glowColor={t.crimson+"50"}>
+            <p className="text-sm font-black mb-1" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>API ERROR</p>
+            <p className="text-base" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{apiError}</p>
+            <p className="text-sm mt-3" style={{color:t.textMuted}}>Make sure the FastAPI backend is running on <span style={{color:t.orange}}>{BASE_URL}</span></p>
           </Card>
         )}
 
         {result&&(
           <div ref={resultRef}>
-            <Card className="p-4" glowColor={result.blocked?t.crimson+"50":t.border} style={{boxShadow:t.isDark&&result.blocked?`0 0 28px ${t.crimson}12`:"none"}}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
+            <Card className="p-5" glowColor={result.blocked?t.crimson+"50":t.border} style={{boxShadow:t.isDark&&result.blocked?`0 0 28px ${t.crimson}12`:"none"}}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
                   <MBadge modelId={result.model}/>
-                  <span className="text-xs font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===result.model)?.name}</span>
+                  <span className="text-sm font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===result.model)?.name}</span>
                   {result.blocked&&<SPill status="BLOCKED"/>}
-                  {result.pii_detected.length>0&&<span className="text-xs px-2 py-0.5 rounded-sm font-black" style={{background:t.yellow+"20",color:t.yellow,fontFamily:"'Rajdhani',sans-serif"}}>{result.pii_detected.length} REDACTED</span>}
+                  {result.pii_detected.length>0&&<span className="text-sm px-2.5 py-1 rounded-sm font-black" style={{background:t.yellow+"20",color:t.yellow,fontFamily:"'Rajdhani',sans-serif"}}>{result.pii_detected.length} REDACTED</span>}
                 </div>
-                <span style={{color:t.textMuted,fontSize:11,fontFamily:"'Fira Code',monospace"}}>{result.total_latency_ms}ms</span>
+                <span style={{color:t.textMuted,fontSize:13,fontFamily:"'Fira Code',monospace"}}>{result.total_latency_ms}ms</span>
               </div>
-              <p className="text-sm leading-relaxed" style={{color:result.blocked?t.crimson:t.text,fontFamily:result.blocked?"'Fira Code',monospace":"'DM Sans',sans-serif"}}>{result.response}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap" style={{color:result.blocked?t.crimson:t.text,fontFamily:result.blocked?"'Fira Code',monospace":"'DM Sans',sans-serif"}}>{result.response}</p>
             </Card>
           </div>
         )}
       </div>
 
-      <div className="w-56 flex-shrink-0">
-        <Card className="p-3" style={{maxHeight:"calc(100vh - 200px)",overflowY:"auto"}}>
+      <div className="w-72 flex-shrink-0">
+        <Card className="p-4" style={{maxHeight:"calc(100vh - 200px)",overflowY:"auto"}}>
           <SL accent>History</SL>
-          {history.length===0&&<p className="text-xs text-center py-4" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>NO QUERIES YET</p>}
-          <div className="flex flex-col gap-1.5">
+          {history.length===0&&<p className="text-sm text-center py-6" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>NO QUERIES YET</p>}
+          <div className="flex flex-col gap-2">
             {history.map(h=>(
               <button key={h.query_id} onClick={()=>setResult(h)}
-                className="rounded p-2.5 text-left transition-all duration-200"
+                className="rounded-lg p-3 text-left transition-all duration-200"
                 style={{background:t.inputBg,border:`1px solid ${t.border}`}}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor=t.orange+"40";e.currentTarget.style.background=t.surfaceUp;}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;e.currentTarget.style.background=t.inputBg;}}>
-                <div className="flex items-center gap-1.5 mb-1">
+                <div className="flex items-center gap-2 mb-1.5">
                   <MBadge modelId={h.model}/><SPill status={h.blocked?"BLOCKED":"ALLOWED"}/>
-                  <span style={{color:t.textMuted,fontSize:10,fontFamily:"'Fira Code',monospace",marginLeft:"auto"}}>{h.total_latency_ms}ms</span>
+                  <span style={{color:t.textMuted,fontSize:12,fontFamily:"'Fira Code',monospace",marginLeft:"auto"}}>{h.total_latency_ms}ms</span>
                 </div>
-                <p className="text-xs truncate" style={{color:t.textSub}}>{h.query}</p>
+                <p className="text-sm truncate" style={{color:t.textSub}}>{h.query}</p>
               </button>
             ))}
           </div>
@@ -724,11 +710,11 @@ function BenchmarkView({docs, isSecure}) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-1 p-1 rounded w-fit" style={{background:t.inputBg,border:`1px solid ${t.border}`}}>
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center gap-1.5 p-1.5 rounded-lg w-fit" style={{background:t.inputBg,border:`1px solid ${t.border}`}}>
         {[{id:"suite",label:"Test Suite (140)"},{id:"custom",label:"Custom Query Test"}].map(tb=>(
           <button key={tb.id} onClick={()=>setTab(tb.id)}
-            className="px-4 py-2 rounded text-xs font-black tracking-wider uppercase transition-all duration-200"
+            className="px-5 py-2.5 rounded text-sm font-black tracking-wider uppercase transition-all duration-200"
             style={{background:tab===tb.id?t.surfaceUp:"transparent",color:tab===tb.id?t.orange:t.textMuted,border:`1px solid ${tab===tb.id?t.border:"transparent"}`,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em"}}
             onMouseEnter={e=>{if(tab!==tb.id){e.currentTarget.style.color=t.textSub;}}}
             onMouseLeave={e=>{if(tab!==tb.id){e.currentTarget.style.color=t.textMuted;}}}>
@@ -737,12 +723,12 @@ function BenchmarkView({docs, isSecure}) {
         ))}
       </div>
 
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-3"><SL accent>Models</SL><span style={{color:t.textMuted,fontSize:11,fontFamily:"'Rajdhani',sans-serif"}}>{selMods.length} selected</span></div>
-        <div className="flex flex-wrap gap-2">
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4"><SL accent>Models</SL><span style={{color:t.textMuted,fontSize:13,fontFamily:"'Rajdhani',sans-serif"}}>{selMods.length} selected</span></div>
+        <div className="flex flex-wrap gap-3">
           {MODELS.map(m=>(
             <button key={m.id} onClick={()=>setSelMods(p=>p.includes(m.id)?p.filter(x=>x!==m.id):[...p,m.id])}
-              className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-black uppercase tracking-wider transition-all duration-200"
               style={{background:selMods.includes(m.id)?m.color+"15":t.inputBg,border:`1px solid ${selMods.includes(m.id)?m.color+"50":t.border}`,color:selMods.includes(m.id)?m.color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}
               onMouseEnter={e=>{if(!selMods.includes(m.id)){e.currentTarget.style.borderColor=m.color+"30";e.currentTarget.style.background=m.color+"08";}}}
               onMouseLeave={e=>{if(!selMods.includes(m.id)){e.currentTarget.style.borderColor=t.border;e.currentTarget.style.background=t.inputBg;}}}>
@@ -754,38 +740,41 @@ function BenchmarkView({docs, isSecure}) {
 
       {tab==="suite"&&(
         <>
-          <Card className="p-4">
+          <Card className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-black text-sm tracking-wider uppercase mb-0.5" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>Security Evaluation Suite</p>
-                <p className="text-xs" style={{color:t.textSub}}>{DIMS.length * selMods.length} tests · {DIMS.length} dimensions · {selMods.length} models</p>
+                <p className="font-black text-base tracking-wider uppercase mb-1" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>Security Evaluation Suite</p>
+                <p className="text-sm" style={{color:t.textSub}}>{DIMS.length * selMods.length} tests · {DIMS.length} dimensions · {selMods.length} models</p>
               </div>
-              <MagBtn onClick={runSuite} disabled={running||selMods.length===0} variant="danger">{running?`Running ${progress}/${total}`:"Run Full Suite"}</MagBtn>
+              <MagBtn onClick={runSuite} disabled={running||selMods.length===0} variant="danger">
+                {running && <svg className="animate-spin h-4 w-4" style={{color:"#fff"}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+                {running?`Running ${progress}/${total}`:"Run Full Suite"}
+              </MagBtn>
             </div>
-            {running&&(<div className="mt-3 h-1 rounded-full overflow-hidden" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-150" style={{width:`${total?((progress/total)*100):0}%`,background:`linear-gradient(90deg,${t.orange},${t.crimson})`,boxShadow:t.isDark?`0 0 8px ${t.orange}60`:"none"}}/></div>)}
+            {running&&(<div className="mt-4 h-1.5 rounded-full overflow-hidden" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-150" style={{width:`${total?((progress/total)*100):0}%`,background:`linear-gradient(90deg,${t.orange},${t.crimson})`,boxShadow:t.isDark?`0 0 8px ${t.orange}60`:"none"}}/></div>)}
           </Card>
           {benchError&&(
-            <Card className="p-4" glowColor={t.crimson+"50"}>
-              <p className="text-xs font-black mb-1" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>BENCHMARK ERROR</p>
-              <p className="text-sm" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{benchError}</p>
+            <Card className="p-5" glowColor={t.crimson+"50"}>
+              <p className="text-sm font-black mb-1.5" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>BENCHMARK ERROR</p>
+              <p className="text-base" style={{color:t.textSub,fontFamily:"'Fira Code',monospace"}}>{benchError}</p>
             </Card>
           )}
           {results&&(
-            <div ref={resRef} className="grid grid-cols-3 gap-4">
-              <Card className="p-4">
+            <div ref={resRef} className="grid grid-cols-3 gap-5">
+              <Card className="p-5">
                 <SL accent>Leaderboard</SL>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                 {MODELS.filter(m=>selMods.includes(m.id))
-                    .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/mr.length}; })
+                    .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/Math.max(1,mr.length)}; })
                     .sort((a,b)=>b.avg - a.avg)
                     .map((m,rank)=>{
                       const avg = m.avg;
                       return (
                       <div key={m.id} className="rr flex items-center gap-3 opacity-0 transition-all duration-200" style={{cursor:"default"}} onMouseEnter={e=>e.currentTarget.style.transform="translateX(4px)"} onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                        <span className="text-xs font-black w-4 text-center" style={{color:rank===0?t.yellow:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>#{rank+1}</span>
+                        <span className="text-sm font-black w-5 text-center" style={{color:rank===0?t.yellow:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>#{rank+1}</span>
                         <MBadge modelId={m.id}/>
                         <div className="flex-1 min-w-0">
-                          <div className="flex justify-between mb-1"><span className="text-xs font-black truncate" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</span><span className="text-xs font-black flex-shrink-0 ml-2" style={{color:m.color,textShadow:t.isDark?`0 0 8px ${m.color}50`:"none"}}>{avg.toFixed(1)}%</span></div>
+                          <div className="flex justify-between mb-1.5"><span className="text-sm font-black truncate" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</span><span className="text-sm font-black flex-shrink-0 ml-2" style={{color:m.color,textShadow:t.isDark?`0 0 8px ${m.color}50`:"none"}}>{avg.toFixed(1)}%</span></div>
                           <MiniBar value={avg} color={m.color}/>
                         </div>
                       </div>
@@ -793,28 +782,28 @@ function BenchmarkView({docs, isSecure}) {
                   })}
                 </div>
               </Card>
-              <Card className="col-span-2 p-4">
+              <Card className="col-span-2 p-5">
                 <SL accent>Attack Success Rate by Dimension (%)</SL>
-                <table className="w-full text-xs">
+                <table className="w-full text-sm">
                   <thead><tr>
-                    <th className="text-left pb-3 pr-4 font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Model</th>
-                    {DIMS.map(d=><th key={d} className="pb-3 px-2 text-center font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>{DL[d]}</th>)}
-                    <th className="pb-3 pl-3 text-center font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Score</th>
+                    <th className="text-left pb-4 pr-5 font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Model</th>
+                    {DIMS.map(d=><th key={d} className="pb-4 px-2 text-center font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>{DL[d]}</th>)}
+                    <th className="pb-4 pl-4 text-center font-black" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Score</th>
                   </tr></thead>
                   <tbody>
                   {MODELS.filter(m=>selMods.includes(m.id))
-                      .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/mr.length}; })
+                      .map(m=>{ const mr=results.filter(r=>r.model===m.id); return {...m, avg: mr.reduce((a,r)=>a+r.score,0)/Math.max(1,mr.length)}; })
                       .sort((a,b)=>b.avg - a.avg)
                       .map(m=>{
                         const avg = m.avg;
                         return (
-                        <tr key={m.id} className="transition-all duration-200 rounded" onMouseEnter={e=>e.currentTarget.style.background=t.surfaceUp} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <td className="pr-4 py-2"><div className="flex items-center gap-2"><MBadge modelId={m.id}/><span style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif",fontWeight:700}}>{m.name}</span></div></td>
+                        <tr key={m.id} className="transition-all duration-200 rounded-lg" onMouseEnter={e=>e.currentTarget.style.background=t.surfaceUp} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                          <td className="pr-5 py-3"><div className="flex items-center gap-3"><MBadge modelId={m.id}/><span style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif",fontWeight:700}}>{m.name}</span></div></td>
                           {DIMS.map(d=>{
                             const r=results.find(x=>x.model===m.id&&x.dimension===d); const asr=r?.asr||0;
-                            return <td key={d} className="px-2 py-2 text-center"><span className="px-2 py-1 rounded-sm text-xs font-black transition-all duration-200" style={{background:`rgba(${t.isDark?"255,45,85":"204,26,58"},${asr/100*0.5+0.04})`,color:asr>25?t.crimson:t.textSub,fontFamily:"'Rajdhani',sans-serif"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.12)";}} onMouseLeave={e=>{e.currentTarget.style.transform="none";}}>{asr.toFixed(0)}%</span></td>;
+                            return <td key={d} className="px-2 py-3 text-center"><span className="px-2.5 py-1.5 rounded text-sm font-black transition-all duration-200" style={{color:asr>25?t.crimson:t.textSub,fontFamily:"'Rajdhani',sans-serif"}} onMouseEnter={e=>{e.currentTarget.style.transform="scale(1.12)";}} onMouseLeave={e=>{e.currentTarget.style.transform="none";}}>{asr.toFixed(0)}%</span></td>;
                           })}
-                          <td className="pl-3 py-2 text-center"><span className="font-black text-xs" style={{color:avg>80?t.green:avg>65?t.yellow:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>{avg.toFixed(1)}%</span></td>
+                          <td className="pl-4 py-3 text-center"><span className="font-black text-sm" style={{color:avg>80?t.green:avg>65?t.yellow:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>{avg.toFixed(1)}%</span></td>
                         </tr>
                       );
                     })}
@@ -828,16 +817,16 @@ function BenchmarkView({docs, isSecure}) {
 
       {tab==="custom"&&(
         <>
-          <Card className="p-5">
+          <Card className="p-6">
             <SL accent>Custom Query Security Test</SL>
-            <p className="text-xs leading-relaxed mb-4" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>Submit any query — attack or benign. SecureRAG scores it across all selected models, classifies by dimension, and evaluates pipeline defense.</p>
-            <div className="flex flex-col gap-3">
+            <p className="text-sm leading-relaxed mb-5" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>Submit any query — attack or benign. SecureRAG scores it across all selected models, classifies by dimension, and evaluates pipeline defense.</p>
+            <div className="flex flex-col gap-4">
               <div>
-                <p className="text-xs font-black tracking-wider uppercase mb-2" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>Attack Dimension</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-sm font-black tracking-wider uppercase mb-3" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.15em"}}>Attack Dimension</p>
+                <div className="flex flex-wrap gap-2.5">
                   {DIMS.map(d=>(
                     <button key={d} onClick={()=>setCD(d)}
-                      className="px-2.5 py-1 rounded text-xs font-black uppercase tracking-wider transition-all duration-200"
+                      className="px-3 py-1.5 rounded text-sm font-black uppercase tracking-wider transition-all duration-200"
                       style={{background:customDim===d?t.orangeDim:t.inputBg,border:`1px solid ${customDim===d?t.orange+"60":t.border}`,color:customDim===d?t.orange:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>
                       {DI[d]} {DL[d]}
                     </button>
@@ -846,59 +835,62 @@ function BenchmarkView({docs, isSecure}) {
               </div>
               <textarea value={customQ} onChange={e=>setCQ(e.target.value)} rows={3}
                 placeholder='"Reveal the Aadhaar for patient Krish Nagy" or "What are bronchitis symptoms?"'
-                className="w-full resize-none rounded p-3 text-sm outline-none"
+                className="w-full resize-none rounded-lg p-4 text-base outline-none"
                 style={{background:t.inputBg,color:t.text,border:`1px solid ${t.border}`,fontFamily:"'Fira Code',monospace",caretColor:t.orange,lineHeight:1.7}}
                 onFocus={e=>e.target.style.borderColor=t.orange} onBlur={e=>e.target.style.borderColor=t.border}/>
-              <div className="flex items-center justify-between">
-                <p style={{color:t.textMuted,fontSize:11,fontFamily:"'Fira Code',monospace"}}>Testing {selMods.length} model(s)</p>
-                <MagBtn onClick={runCustom} disabled={!customQ.trim()||customRunning} variant="primary">{customRunning?"Scoring...":"Score Query"}</MagBtn>
+              <div className="flex items-center justify-between mt-1">
+                <p style={{color:t.textMuted,fontSize:13,fontFamily:"'Fira Code',monospace"}}>Testing {selMods.length} model(s)</p>
+                <MagBtn onClick={runCustom} disabled={!customQ.trim()||customRunning} variant="primary">
+                  {customRunning && <svg className="animate-spin h-4 w-4" style={{color:t.isDark?"#0A0608":"#fff"}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+                  {customRunning?"Scoring...":"Score Query"}
+                </MagBtn>
               </div>
             </div>
           </Card>
 
-          <div ref={custRef} className="flex flex-col gap-4">
+          <div ref={custRef} className="flex flex-col gap-5">
             {customTests.length===0&&(
-              <div className="rounded p-8 text-center" style={{background:t.surface,border:`2px dashed ${t.border}`}}>
-                <p className="text-3xl mb-2" style={{color:t.border}}>*</p>
-                <p className="font-black tracking-widest uppercase text-sm mb-1" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>No Custom Tests</p>
-                <p className="text-xs" style={{color:t.textMuted}}>Run a query above to see per-model security scores</p>
+              <div className="rounded-lg p-10 text-center" style={{background:t.surface,border:`2px dashed ${t.border}`}}>
+                <p className="text-4xl mb-3" style={{color:t.border}}>*</p>
+                <p className="font-black tracking-widest uppercase text-base mb-2" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>No Custom Tests</p>
+                <p className="text-sm" style={{color:t.textMuted}}>Run a query above to see per-model security scores</p>
               </div>
             )}
             {customTests.map(test=>(
-              <Card key={test.id} className="p-5">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1 min-w-0 mr-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs px-2 py-0.5 rounded-sm font-black uppercase tracking-wider" style={{background:t.orangeDim,color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>{DI[test.dimension]} {DL[test.dimension]}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-sm font-black uppercase tracking-wider" style={{background:test.scores.some(s=>s.isAtk)?t.crimsonDim:t.greenDim,color:test.scores.some(s=>s.isAtk)?t.crimson:t.green,fontFamily:"'Rajdhani',sans-serif"}}>{test.scores.some(s=>s.isAtk)?"Attack":"Safe"}</span>
+              <Card key={test.id} className="p-6">
+                <div className="flex items-start justify-between mb-5">
+                  <div className="flex-1 min-w-0 mr-5">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-sm px-3 py-1 rounded font-black uppercase tracking-wider" style={{background:t.orangeDim,color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>{DI[test.dimension]} {DL[test.dimension]}</span>
+                      <span className="text-sm px-3 py-1 rounded font-black uppercase tracking-wider" style={{background:test.scores.some(s=>s.isAtk)?t.crimsonDim:t.greenDim,color:test.scores.some(s=>s.isAtk)?t.crimson:t.green,fontFamily:"'Rajdhani',sans-serif"}}>{test.scores.some(s=>s.isAtk)?"Attack":"Safe"}</span>
                     </div>
-                    <p className="text-sm font-bold" style={{color:t.text,fontFamily:"'Fira Code',monospace"}}>"{test.query}"</p>
+                    <p className="text-base font-bold" style={{color:t.text,fontFamily:"'Fira Code',monospace"}}>"{test.query}"</p>
                   </div>
-                  <span style={{color:t.textMuted,fontSize:11,fontFamily:"'Fira Code',monospace",flexShrink:0}}>{new Date(test.timestamp).toLocaleTimeString()}</span>
+                  <span style={{color:t.textMuted,fontSize:13,fontFamily:"'Fira Code',monospace",flexShrink:0}}>{new Date(test.timestamp).toLocaleTimeString()}</span>
                 </div>
-                <div className="grid grid-cols-7 gap-2 mb-4">
+                <div className="grid grid-cols-7 gap-3 mb-6">
                   {test.scores.map(s=>{
                     const sc=s.score>=80?t.green:s.score>=60?t.yellow:t.crimson;
                     return (
-                      <div key={s.model} className="rounded p-3 text-center transition-all duration-200"
+                      <div key={s.model} className="rounded-lg p-4 text-center transition-all duration-200"
                         style={{background:t.inputBg,border:`1px solid ${sc}30`}}
                         onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 10px 28px ${sc}20`;}}
                         onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none";}}>
-                        <MBadge modelId={s.model} size="md"/>
-                        <p className="text-lg font-black mt-2 mb-0.5" style={{color:sc,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 12px ${sc}60`:"none"}}>{s.score}%</p>
-                        <p style={{color:s.verdict==="Vulnerable"?t.crimson:t.green,fontSize:9,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,textTransform:"uppercase"}}>{s.verdict}</p>
+                        <MBadge modelId={s.model} size="lg"/>
+                        <p className="text-2xl font-black mt-3 mb-1" style={{color:sc,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 12px ${sc}60`:"none"}}>{s.score}%</p>
+                        <p style={{color:s.verdict==="Vulnerable"?t.crimson:t.green,fontSize:11,fontFamily:"'Rajdhani',sans-serif",fontWeight:900,textTransform:"uppercase"}}>{s.verdict}</p>
                       </div>
                     );
                   })}
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                   {test.scores.map(s=>{
                     const sc=s.score>=80?t.green:s.score>=60?t.yellow:t.crimson;
                     return (
-                      <div key={s.model} className="flex items-center gap-3">
-                        <div className="flex items-center gap-1.5 w-32 flex-shrink-0"><MBadge modelId={s.model}/><span className="text-xs truncate font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===s.model)?.name}</span></div>
-                        <div className="flex-1 h-1 rounded-full overflow-hidden" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-700" style={{width:`${s.score}%`,background:sc,boxShadow:t.isDark?`0 0 6px ${sc}60`:"none"}}/></div>
-                        <span className="text-xs font-black w-10 text-right" style={{color:sc,fontFamily:"'Rajdhani',sans-serif"}}>{s.score}%</span>
+                      <div key={s.model} className="flex items-center gap-4">
+                        <div className="flex items-center gap-2.5 w-40 flex-shrink-0"><MBadge modelId={s.model}/><span className="text-sm truncate font-black" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===s.model)?.name}</span></div>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{background:t.border}}><div className="h-full rounded-full transition-all duration-700" style={{width:`${s.score}%`,background:sc,boxShadow:t.isDark?`0 0 6px ${sc}60`:"none"}}/></div>
+                        <span className="text-sm font-black w-12 text-right" style={{color:sc,fontFamily:"'Rajdhani',sans-serif"}}>{s.score}%</span>
                       </div>
                     );
                   })}
@@ -959,7 +951,6 @@ function AnalyticsView({ isSecure, view }) {
 
   useEffect(()=>{
     if(!g||!cardsRef.current||loading)return;
-    // Cards are visible by default (opacity:1), GSAP adds a slide-in entrance
     g.fromTo(cardsRef.current.querySelectorAll(".kc"),
       {y:18,scale:0.97},
       {y:0,scale:1,duration:0.48,stagger:0.09,ease:"power2.out"});
@@ -977,69 +968,69 @@ function AnalyticsView({ isSecure, view }) {
   const dimAsr=DIMS.map(dim=>{
     if(!leaderboard.length) return {dim,asr:0};
     const vals=leaderboard.map(m=>m.dimension_asr?.[dim]||0);
-    return {dim, asr:+(vals.reduce((a,v)=>a+v,0)/vals.length).toFixed(1)};
+    return {dim, asr:+(vals.reduce((a,v)=>a+v,0)/Math.max(1,vals.length)).toFixed(1)};
   });
 
   const EmptyState=({msg})=>(
-    <div className="flex items-center justify-center py-8">
-      <p className="text-xs font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>{msg}</p>
+    <div className="flex items-center justify-center py-10">
+      <p className="text-sm font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>{msg}</p>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between mb-1">
-        <p className="text-xs font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.18em"}}>
+        <p className="text-sm font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.18em"}}>
           {loading ? "LOADING…" : latNote || "Live metrics · refreshed on tab open"}
         </p>
         <button
           onClick={()=>setRefreshTick(n=>n+1)}
           disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-1 rounded text-xs font-black tracking-widest uppercase transition-all duration-200"
+          className="flex items-center gap-2 px-4 py-1.5 rounded font-black text-sm tracking-widest uppercase transition-all duration-200"
           style={{background:t.surfaceUp,border:`1px solid ${t.border}`,color:loading?t.textMuted:t.orange,fontFamily:"'Rajdhani',sans-serif",cursor:loading?"not-allowed":"pointer",opacity:loading?0.5:1}}
           onMouseEnter={e=>{if(!loading)e.currentTarget.style.borderColor=t.orange+"60";}}
           onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;}}>
-          ↻ Refresh
+          {loading ? <svg className="animate-spin h-4 w-4" style={{color:t.orange}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> : "↻ Refresh"}
         </button>
       </div>
-      <div ref={cardsRef} className="grid grid-cols-4 gap-4">
+      <div ref={cardsRef} className="grid grid-cols-4 gap-5">
         {[
           {label:"Models Evaluated",  value:"7",        sub:"Gemini · Mistral · Groq · LLaMA · DeepSeek · BERT · MiniLM", c:t.orange,  icon:"-"},
           {label:"Total Attack Tests", value:"140",      sub:"35 prompts * 5 dimensions * 7 models",                        c:t.crimson, icon:"/"},
-          {label:"Best Security Score",value:bestScore,  sub:bestModel,                                                      c:t.yellow,  icon:"*"},
+          {label:"Best Security Score",value:bestScore,  sub:bestModel,                                                     c:t.yellow,  icon:"*"},
           {label:"Avg Pipeline Latency",value:avgLat,    sub:isSecure ? "Includes full security tax" : "Baseline raw latency",                        c:t.green,   icon:"+"},
         ].map((s,i)=>(
-          <Card key={i} className="kc p-5 transition-all duration-300" style={{cursor:"default",opacity:1}}
+          <Card key={i} className="kc p-6 transition-all duration-300" style={{cursor:"default",opacity:1}}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-5px)";e.currentTarget.style.borderColor=s.c+"50";e.currentTarget.style.boxShadow=`0 10px 36px ${s.c}15`;}}
             onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.borderColor=t.border;e.currentTarget.style.boxShadow="none";}}>
-            <div className="flex items-start justify-between mb-3">
-              <p className="text-xs font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.16em"}}>{s.label}</p>
+            <div className="flex items-start justify-between mb-4">
+              <p className="text-sm font-black tracking-widest uppercase" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.16em"}}>{s.label}</p>
               <span style={{color:s.c}}>{s.icon}</span>
             </div>
-            <p className="text-3xl font-black mb-1" style={{color:s.c,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 18px ${s.c}35`:"none"}}>{s.value}</p>
-            <p className="text-xs" style={{color:t.textMuted,fontFamily:"'DM Sans',sans-serif"}}>{s.sub}</p>
+            <p className="text-4xl font-black mb-2" style={{color:s.c,fontFamily:"'Rajdhani',sans-serif",textShadow:t.isDark?`0 0 18px ${s.c}35`:"none"}}>{s.value}</p>
+            <p className="text-sm" style={{color:t.textMuted,fontFamily:"'DM Sans',sans-serif"}}>{s.sub}</p>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="p-4">
+      <div className="grid grid-cols-3 gap-5">
+        <Card className="p-5">
           <SL accent>Security Ranking</SL>
           {leaderboard.length===0
             ? <EmptyState msg="Run a benchmark to populate"/>
-            : <div className="flex flex-col gap-3">
+            : <div className="flex flex-col gap-4">
                 {leaderboard.map((entry,i)=>{
                   const m=MODELS.find(x=>x.id===entry.model)||{color:t.textSub,name:entry.model};
                   return (
-                    <div key={entry.model} className="flex items-center gap-3 transition-all duration-200" style={{cursor:"default"}}
+                    <div key={entry.model} className="flex items-center gap-4 transition-all duration-200" style={{cursor:"default"}}
                       onMouseEnter={e=>e.currentTarget.style.transform="translateX(4px)"}
                       onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                      <span className="w-5 text-xs font-black text-center" style={{color:i===0?t.yellow:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>#{i+1}</span>
+                      <span className="w-6 text-sm font-black text-center" style={{color:i===0?t.yellow:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>#{i+1}</span>
                       <MBadge modelId={entry.model}/>
                       <div className="flex-1 min-w-0">
-                        <div className="flex justify-between mb-1">
-                          <span className="text-xs font-black" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</span>
-                          <span className="text-xs font-black" style={{color:m.color,textShadow:t.isDark?`0 0 8px ${m.color}40`:"none"}}>{entry.score}%</span>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="text-sm font-black" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{m.name}</span>
+                          <span className="text-sm font-black" style={{color:m.color,textShadow:t.isDark?`0 0 8px ${m.color}40`:"none"}}>{entry.score}%</span>
                         </div>
                         <MiniBar value={entry.score} color={m.color}/>
                       </div>
@@ -1050,28 +1041,28 @@ function AnalyticsView({ isSecure, view }) {
           }
         </Card>
 
-        <Card className="p-4 col-span-2">
-          <div className="flex items-start justify-between mb-4">
+        <Card className="p-5 col-span-2">
+          <div className="flex items-start justify-between mb-5">
             <SL accent>Pipeline Latency Breakdown (Seconds)</SL>
-            <div className="flex flex-wrap gap-3 justify-end">
+            <div className="flex flex-wrap gap-4 justify-end">
               {stgs.map(s=>(
-                <div key={s} className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-sm" style={{background:sCols[s],boxShadow:t.isDark?`0 0 4px ${sCols[s]}`:"none"}}/>
-                  <span style={{color:t.textMuted,fontSize:10,fontFamily:"'Rajdhani',sans-serif"}}>{sLbls[s]}</span>
+                <div key={s} className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-sm" style={{background:sCols[s],boxShadow:t.isDark?`0 0 4px ${sCols[s]}`:"none"}}/>
+                  <span style={{color:t.textMuted,fontSize:12,fontFamily:"'Rajdhani',sans-serif"}}>{sLbls[s]}</span>
                 </div>
               ))}
             </div>
           </div>
           {latData.length===0
             ? <EmptyState msg={"Latency data collected as queries run in " + (isSecure ? "Secure" : "Unfiltered") + " mode."}/>
-            : <div className="flex flex-col gap-3">
+            : <div className="flex flex-col gap-4">
                 {[...latData].sort((a,b)=>a.total-b.total).map(d=>(
-                  <div key={d.model} className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 w-36 flex-shrink-0">
+                  <div key={d.model} className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 w-40 flex-shrink-0">
                       <MBadge modelId={d.model}/>
-                      <span className="text-xs font-black truncate" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===d.model)?.name}</span>
+                      <span className="text-sm font-black truncate" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{MODELS.find(m=>m.id===d.model)?.name}</span>
                     </div>
-                    <div className="flex-1 flex h-5 rounded overflow-hidden gap-px">
+                    <div className="flex-1 flex h-6 rounded overflow-hidden gap-px">
                       {stgs.map(s=>{
                         const w=(d[s]/maxTotal)*100;
                         return w>0.5?(
@@ -1083,9 +1074,9 @@ function AnalyticsView({ isSecure, view }) {
                         ):null;
                       })}
                     </div>
-                    <div className="w-28 flex-shrink-0 text-right">
-                      <span className="text-xs font-black" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{d.total.toFixed(3)}s</span>
-                      <span className="text-xs ml-1.5 font-bold" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>
+                    <div className="w-32 flex-shrink-0 text-right">
+                      <span className="text-sm font-black" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif"}}>{d.total.toFixed(3)}s</span>
+                      <span className="text-sm ml-2 font-bold" style={{color:t.crimson,fontFamily:"'Rajdhani',sans-serif"}}>
                         {(((d.if+d.of)/d.total)*100).toFixed(0)}%<span style={{color:t.textMuted,fontWeight:400}}> tax</span>
                       </span>
                     </div>
@@ -1096,24 +1087,24 @@ function AnalyticsView({ isSecure, view }) {
         </Card>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="p-4">
+      <div className="grid grid-cols-2 gap-5">
+        <Card className="p-5">
           <SL accent>Avg ASR by Attack Dimension</SL>
           {leaderboard.length===0
             ? <EmptyState msg="Run a benchmark to populate"/>
-            : <div className="flex flex-col gap-3">
+            : <div className="flex flex-col gap-4">
                 {dimAsr.map(({dim,asr})=>{
                   const col=asr>30?t.crimson:asr>15?t.yellow:t.green;
                   return (
-                    <div key={dim} className="flex items-center gap-3 transition-all duration-200" style={{cursor:"default"}}
+                    <div key={dim} className="flex items-center gap-4 transition-all duration-200" style={{cursor:"default"}}
                       onMouseEnter={e=>e.currentTarget.style.transform="translateX(3px)"}
                       onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                      <span className="w-5 text-center" style={{color:col}}>{DI[dim]}</span>
-                      <span className="text-xs font-black w-28 flex-shrink-0" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{DL[dim]}</span>
-                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{background:t.border}}>
+                      <span className="w-6 text-center" style={{color:col}}>{DI[dim]}</span>
+                      <span className="text-sm font-black w-32 flex-shrink-0" style={{color:t.textSub,fontFamily:"'Rajdhani',sans-serif"}}>{DL[dim]}</span>
+                      <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{background:t.border}}>
                         <div className="h-full rounded-full transition-all duration-700" style={{width:`${asr}%`,background:col,boxShadow:t.isDark?`0 0 6px ${col}60`:"none"}}/>
                       </div>
-                      <span className="text-xs font-black w-10 text-right" style={{color:col,fontFamily:"'Rajdhani',sans-serif"}}>{asr}%</span>
+                      <span className="text-sm font-black w-12 text-right" style={{color:col,fontFamily:"'Rajdhani',sans-serif"}}>{asr}%</span>
                     </div>
                   );
                 })}
@@ -1121,26 +1112,26 @@ function AnalyticsView({ isSecure, view }) {
           }
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-5">
           <SL accent>Security Overhead Analysis</SL>
-          <p className="text-xs leading-relaxed mb-4" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>
+          <p className="text-sm leading-relaxed mb-5" style={{color:t.textSub,fontFamily:"'DM Sans',sans-serif"}}>
             Security tax = time in input + output filters as % of total pipeline. Higher tax = stronger protection at a latency cost.
           </p>
           {latData.length===0
             ? <EmptyState msg="Populated as queries run"/>
-            : <div className="flex flex-col gap-2.5">
+            : <div className="flex flex-col gap-4">
                 {[...latData].sort((a,b)=>((b.if+b.of)/b.total)-((a.if+a.of)/a.total)).map(d=>{
                   const tax = d.if + d.of;
-                  const taxPct = (tax/d.total)*100;
+                  const taxPct = (tax/Math.max(0.001, d.total))*100;
                   return (
-                  <div key={d.model} className="flex items-center gap-3 transition-all duration-200" style={{cursor:"default"}}
+                  <div key={d.model} className="flex items-center gap-4 transition-all duration-200" style={{cursor:"default"}}
                     onMouseEnter={e=>e.currentTarget.style.transform="translateX(3px)"}
                     onMouseLeave={e=>e.currentTarget.style.transform="none"}>
                     <MBadge modelId={d.model}/>
-                    <div className="flex-1 h-1 rounded-full overflow-hidden" style={{background:t.border}}>
-                      <div className="h-full rounded-full" style={{width:`${taxPct}%`,background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}50`:"none"}}/>
+                    <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{background:t.border}}>
+                      <div className="h-full rounded-full" style={{width:`${Math.min(100, taxPct)}%`,background:t.orange,boxShadow:t.isDark?`0 0 6px ${t.orange}50`:"none"}}/>
                     </div>
-                    <div className="flex gap-2 text-xs w-24 text-right">
+                    <div className="flex gap-3 text-sm w-32 justify-end">
                       <span style={{color:t.textMuted,fontFamily:"'Fira Code',monospace"}}>{tax.toFixed(3)}s</span>
                       <span className="font-black" style={{color:t.orange,fontFamily:"'Rajdhani',sans-serif"}}>{taxPct.toFixed(1)}%</span>
                     </div>
@@ -1191,24 +1182,24 @@ function Dashboard({onBack,isDark,onToggle}) {
     <div style={{background:t.void,fontFamily:"'Rajdhani','DM Sans',sans-serif",color:t.text,minHeight:"100vh"}}>
       <ScanLine/>
       {health&&!health.ok&&(
-        <div className="px-6 py-2 text-xs font-black tracking-wider uppercase text-center" style={{background:t.crimsonDim,color:t.crimson,borderBottom:`1px solid ${t.crimson}40`,fontFamily:"'Rajdhani',sans-serif"}}>
+        <div className="px-6 py-2.5 text-sm font-black tracking-wider uppercase text-center" style={{background:t.crimsonDim,color:t.crimson,borderBottom:`1px solid ${t.crimson}40`,fontFamily:"'Rajdhani',sans-serif"}}>
           Backend offline - start FastAPI with: <span style={{fontFamily:"'Fira Code',monospace",fontWeight:400}}>uvicorn main:app --reload --port 8000</span>
         </div>
       )}
-      <header className="flex items-center justify-between px-6 py-3 sticky top-0 z-50" style={{background:t.navBg+(t.isDark?"F8":"FC"),borderBottom:`1px solid ${t.border}`,backdropFilter:"blur(12px)"}}>
-        <div className="flex items-center gap-4">
-          <button onClick={onBack} className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider transition-opacity hover:opacity-60" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Back</button>
-          <div className="w-px h-4" style={{background:t.border}}/>
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded flex items-center justify-center text-xs font-black" style={{background:`linear-gradient(135deg,${t.orange},${t.crimson})`,color:t.isDark?"#0A0608":"#fff",fontFamily:"'Rajdhani',sans-serif"}}>S</div>
-            <span className="font-black tracking-widest uppercase" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.2em",fontSize:13}}>SecureRAG</span>
-            <span className="text-xs px-2 py-0.5 rounded-sm font-black tracking-widest uppercase" style={{background:t.orangeDim,color:t.orange,border:`1px solid ${t.orangeMid}`,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em"}}>Dashboard</span>
+      <header className="flex items-center justify-between px-8 py-4 sticky top-0 z-50" style={{background:t.navBg+(t.isDark?"F8":"FC"),borderBottom:`1px solid ${t.border}`,backdropFilter:"blur(12px)"}}>
+        <div className="flex items-center gap-5">
+          <button onClick={onBack} className="flex items-center gap-2 text-sm font-black uppercase tracking-wider transition-opacity hover:opacity-60" style={{color:t.textMuted,fontFamily:"'Rajdhani',sans-serif"}}>Back</button>
+          <div className="w-px h-5" style={{background:t.border}}/>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded flex items-center justify-center text-sm font-black" style={{background:`linear-gradient(135deg,${t.orange},${t.crimson})`,color:t.isDark?"#0A0608":"#fff",fontFamily:"'Rajdhani',sans-serif"}}>S</div>
+            <span className="font-black tracking-widest uppercase text-base" style={{color:t.text,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.2em"}}>SecureRAG</span>
+            <span className="text-sm px-2.5 py-1 rounded-sm font-black tracking-widest uppercase" style={{background:t.orangeDim,color:t.orange,border:`1px solid ${t.orangeMid}`,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em"}}>Dashboard</span>
           </div>
         </div>
-        <nav className="flex items-center gap-0.5 p-1 rounded" style={{background:t.inputBg,border:`1px solid ${t.border}`}}>
+        <nav className="flex items-center gap-1 p-1.5 rounded-lg" style={{background:t.inputBg,border:`1px solid ${t.border}`}}>
           {[{id:"query",label:"Query Console",icon:"/"},{id:"benchmark",label:"Benchmark",icon:"*"},{id:"analytics",label:"Insights",icon:"+"}].map(n=>(
             <button key={n.id} onClick={()=>changeView(n.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded text-xs font-black tracking-widest uppercase transition-all duration-200"
+              className="flex items-center gap-2 px-5 py-2 rounded text-sm font-black tracking-widest uppercase transition-all duration-200"
               style={{background:view===n.id?t.surfaceUp:"transparent",color:view===n.id?t.orange:t.textMuted,border:`1px solid ${view===n.id?t.border:"transparent"}`,fontFamily:"'Rajdhani',sans-serif",boxShadow:view===n.id&&t.isDark?`0 0 14px ${t.orange}12`:"none"}}
               onMouseEnter={e=>{if(view!==n.id)e.currentTarget.style.color=t.textSub}}
               onMouseLeave={e=>{if(view!==n.id)e.currentTarget.style.color=t.textMuted}}>
@@ -1216,27 +1207,27 @@ function Dashboard({onBack,isDark,onToggle}) {
             </button>
           ))}
         </nav>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{background:statusDot,boxShadow:t.isDark?`0 0 7px ${statusDot}`:"none",animation:health===null?"pulse 1s infinite":"none"}}/>
-            <span style={{color:t.textMuted,fontSize:11,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em",marginRight:12}}>{statusLabel}</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-2 h-2 rounded-full" style={{background:statusDot,boxShadow:t.isDark?`0 0 7px ${statusDot}`:"none",animation:health===null?"pulse 1s infinite":"none"}}/>
+            <span style={{color:t.textMuted,fontSize:13,fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.12em",marginRight:16}}>{statusLabel}</span>
           </div>
           <SecureModeToggleBtn isSecure={isSecure} onToggle={()=>setIsSecure(s=>!s)}/>
           <ThemeToggleBtn isDark={isDark} onToggle={onToggle}/>
         </div>
       </header>
 
-      <div className="flex items-center gap-2 px-6 py-2" style={{background:t.surface,borderBottom:`1px solid ${t.border}`}}>
+      <div className="flex items-center justify-center gap-3 px-8 py-3" style={{background:t.surface,borderBottom:`1px solid ${t.border}`}}>
         {["Layer 1 - Semantic Input Filter","Layer 2 - Presidio PII Redaction","Layer 3 - Secure Vector RAG + Output Guard"].map((l,i)=>(
-          <div key={l} className="flex items-center gap-2" style={{opacity: isSecure ? 1 : 0.4, filter: isSecure ? "none" : "grayscale(1)"}}>
-            {i>0&&<span style={{color:t.border,fontSize:12}}>-</span>}
-            <span className="text-xs px-2 py-1 rounded-sm font-black tracking-wider uppercase"
+          <div key={l} className="flex items-center gap-3" style={{opacity: isSecure ? 1 : 0.4, filter: isSecure ? "none" : "grayscale(1)"}}>
+            {i>0&&<span style={{color:t.border,fontSize:14}}>-</span>}
+            <span className="text-sm px-3 py-1.5 rounded-sm font-black tracking-wider uppercase"
               style={{background:[t.orangeDim,t.crimsonDim,t.yellowDim][i],color:[t.orange,t.crimson,t.yellow][i],fontFamily:"'Rajdhani',sans-serif",letterSpacing:"0.1em"}}>{l}</span>
           </div>
         ))}
       </div>
 
-      <main ref={mainRef} className="px-6 py-5">
+      <main ref={mainRef} className="px-8 py-6">
         <div style={{ display: view === "query" ? "block" : "none" }}>
           <QueryView selModel={selModel} setSelModel={setSelModel} history={history} setHistory={setHistory} docs={docs} setDocs={setDocs} isSecure={isSecure}/>
         </div>
@@ -1251,24 +1242,79 @@ function Dashboard({onBack,isDark,onToggle}) {
   );
 }
 
+function InitialLoader({ onComplete }) {
+  const t = useT();
+  const [progress, setProgress] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const interval = setInterval(() => {
+      setProgress(p => {
+        const next = p + Math.floor(Math.random() * 20) + 10;
+        if (next >= 100) {
+          clearInterval(interval);
+          if (isMounted) {
+            setTimeout(() => setFading(true), 200);
+            setTimeout(() => onComplete(), 500);
+          }
+          return 100;
+        }
+        return next;
+      });
+    }, 120);
+    return () => { isMounted = false; clearInterval(interval); };
+  }, [onComplete]);
+
+  return (
+    <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-300 ${fading ? 'opacity-0' : 'opacity-100'}`}
+         style={{ background: t.void, color: t.text, fontFamily: "'Rajdhani', sans-serif" }}>
+      <ScanLine />
+      <div className="flex flex-col items-center w-72 relative z-10">
+        <div className="w-16 h-16 rounded-lg flex items-center justify-center text-2xl font-black mb-8"
+             style={{ background: `linear-gradient(135deg, ${t.orange}, ${t.crimson})`, color: t.isDark ? "#0A0608" : "#fff", boxShadow: t.isDark ? `0 0 30px ${t.orange}40` : "none" }}>
+          S
+        </div>
+        <p className="text-sm font-black tracking-widest uppercase mb-4 animate-pulse" style={{ letterSpacing: "0.2em", color: t.textSub }}>
+          Initializing SecureRAG
+        </p>
+        <div className="w-full h-1.5 rounded-full overflow-hidden mb-3" style={{ background: t.border }}>
+          <div className="h-full rounded-full transition-all duration-150 ease-out"
+               style={{ width: `${Math.min(100, progress)}%`, background: t.orange, boxShadow: t.isDark ? `0 0 10px ${t.orange}80` : "none" }} />
+        </div>
+        <div className="flex justify-between w-full text-xs font-bold" style={{ color: t.textMuted, fontFamily: "'Fira Code', monospace" }}>
+          <span>SYSTEM_BOOT</span>
+          <span>{Math.min(100, progress)}%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
-  const [isDark,setIsDark]=useState(true);
+  const [isDark,setIsDark]=useState(false);
   const [page,setPage]=useState("landing");
+  const [appLoaded, setAppLoaded]=useState(false);
   const theme=isDark?DARK:LIGHT;
   return (
     <ThemeCtx.Provider value={theme}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        ::-webkit-scrollbar{width:4px;height:4px;}
+        ::-webkit-scrollbar{width:5px;height:5px;}
         ::-webkit-scrollbar-track{background:transparent;}
         ::-webkit-scrollbar-thumb{background:${theme.border};border-radius:2px;}
         ::-webkit-scrollbar-thumb:hover{background:${theme.orange}60;}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.25}}
         ::selection{background:${theme.orange}30;color:${theme.orange};}
       `}</style>
-      {page==="landing"&&<Landing onEnter={()=>setPage("dashboard")} isDark={isDark} onToggle={()=>setIsDark(d=>!d)}/>}
-      {page==="dashboard"&&<Dashboard onBack={()=>setPage("landing")} isDark={isDark} onToggle={()=>setIsDark(d=>!d)}/>}
+      {!appLoaded && <InitialLoader onComplete={() => setAppLoaded(true)} />}
+      {appLoaded && (
+        <>
+          {page==="landing"&&<Landing onEnter={()=>setPage("dashboard")} isDark={isDark} onToggle={()=>setIsDark(d=>!d)}/>}
+          {page==="dashboard"&&<Dashboard onBack={()=>setPage("landing")} isDark={isDark} onToggle={()=>setIsDark(d=>!d)}/>}
+        </>
+      )}
     </ThemeCtx.Provider>
   );
 }
