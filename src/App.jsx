@@ -31,7 +31,7 @@ const MODELS = [
   { id:"mistral",             name:"Mistral Large",     provider:"Mistral AI",    color:"#FF2D55", abbr:"M" },
   { id:"groq",                name:"LLaMA3 70B",        provider:"Groq",          color:"#FFE600", abbr:"L" },
   { id:"llama3-70b-instruct", name:"LLaMA3 Instruct",   provider:"NVIDIA NIM",    color:"#00FF9C", abbr:"N" },
-  { id:"deepseek",            name:"DeepSeek V3.2",     provider:"Azure AI",      color:"#FF8C42", abbr:"D" },
+  { id:"deepseek",            name:"DeepSeek V3.1",     provider:"Azure AI",      color:"#FF8C42", abbr:"D" },
   { id:"bert_qa",             name:"BERT QA",           provider:"HuggingFace",   color:"#FF2D55", abbr:"B" },
   { id:"minilm",              name:"MiniLM",            provider:"Local",         color:"#9B8FA8", abbr:"m" },
 ];
